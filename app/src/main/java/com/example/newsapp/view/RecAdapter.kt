@@ -3,20 +3,27 @@ package com.example.newsapp.view
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ListItemBinding
 import com.example.newsapp.repository.model.Article
-import com.example.newsapp.view.ImageClickListener
+
+
 
 class RecAdapter(
     val context: Context?,
     val clickListener: ImageClickListener
-    ) :
+    ) : RecyclerView.Adapter<RecAdapter.ImageViewHolder>() {
 
-    RecyclerView.Adapter<RecAdapter.ImageViewHolder>() {
+    companion object{
+        private val ITEM = 0
+        private val LOADING = 1
+    }
+    private val isLoadingAdded = false
+
 
     var list: MutableList<Article> = ArrayList()
 
@@ -35,6 +42,13 @@ class RecAdapter(
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         holder.onBind(position)
+    }
+
+    fun addmoreData(listItems: List<Article>) {
+        val size = this.list.size
+        this.list.addAll(listItems)
+        val sizeNew = this.list.size
+        notifyItemRangeChanged(size, sizeNew)
     }
 
     fun setlist(imagelist: List<Article>) {

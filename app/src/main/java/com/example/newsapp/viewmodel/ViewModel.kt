@@ -1,6 +1,7 @@
 package com.example.newsapp.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,7 +28,7 @@ class ViewModel @Inject constructor(
 
     val bttext = "Search"
     val inputtext = MutableLiveData<String>()
-    val page = MutableLiveData<Int>()
+    var page = 1;
     private val statusmessage = SingleLiveEvent<String>()
     val message: SingleLiveEvent<String>
         get() {  return statusmessage }
@@ -76,6 +77,18 @@ class ViewModel @Inject constructor(
         }
     }
 
+    fun getdata() {
+        Log.e("paging",page.toString())
+        if(page==1){
+            getalldata(inputtext.value.toString(), 1)
+            page = page+1
+        }else{
+            page.let { getalldata(inputtext.value.toString(), it) }
+            page = page+1
+        }
+
+    }
+
     fun adddata(article:Article) {
         viewModelScope.launch {
             repository.adddata(article)
@@ -94,10 +107,8 @@ class ViewModel @Inject constructor(
         if (inputtext.value == null) {
             statusmessage.value = "Please enter text"
         } else {
-
-            page.value = 1
-            getalldata(inputtext.value!!, page.value!!)
-
+            page = 1
+            getalldata(inputtext.value!!, page)
         }
 
     }
