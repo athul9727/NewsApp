@@ -1,8 +1,8 @@
 package com.example.newsapp.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivityMainBinding
@@ -14,6 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    val fragment1: Fragment = ImagesFragment()
+    val fragment2: Fragment = BookmarkFragment()
+    var active: Fragment = fragment1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,18 +26,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         binding.bottomNav.menu.getItem(0).isCheckable = true
-        addFragment(ImagesFragment())
+       // addFragment(ImagesFragment())
+        supportFragmentManager.beginTransaction().add(R.id.fragment_container, fragment2, "2").hide(fragment2).commit();
+        supportFragmentManager.beginTransaction().add(R.id.fragment_container,fragment1, "1").commit();
         binding.bottomNav.setOnNavigationItemSelectedListener {menu ->
 
             when(menu.itemId){
 
                 R.id.news -> {
-                    addFragment(ImagesFragment())
+                   // addFragment(ImagesFragment())
+                    supportFragmentManager.beginTransaction().hide(active).show(fragment1).commit();
+                    active = fragment1;
                     true
                 }
 
                 R.id.bookmark -> {
-                    addFragment(BookmarkFragment())
+                   // addFragment(BookmarkFragment())
+                    supportFragmentManager.beginTransaction().hide(active).show(fragment2).commit();
+                    active = fragment2;
                     true
                 }
                 else -> false
